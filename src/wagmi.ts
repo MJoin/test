@@ -1,5 +1,6 @@
+'use client'
 import { configureChains, createConfig } from 'wagmi'
-import { goerli, mainnet } from 'wagmi/chains'
+import { goerli, bsc, bscTestnet, mainnet } from 'wagmi/chains'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
@@ -10,10 +11,8 @@ import { publicProvider } from 'wagmi/providers/public'
 const walletConnectProjectId = 'no'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, ...(process.env.NODE_ENV === 'development' ? [goerli] : [])],
-  [
-    publicProvider(),
-  ],
+  [mainnet, bsc, bscTestnet, goerli],
+  [publicProvider()]
 )
 
 export const config = createConfig({
@@ -23,23 +22,23 @@ export const config = createConfig({
     new CoinbaseWalletConnector({
       chains,
       options: {
-        appName: 'wagmi',
-      },
+        appName: 'wagmi'
+      }
     }),
     new WalletConnectConnector({
       chains,
       options: {
-        projectId: walletConnectProjectId,
-      },
+        projectId: walletConnectProjectId
+      }
     }),
     new InjectedConnector({
       chains,
       options: {
         name: 'Injected',
-        shimDisconnect: true,
-      },
-    }),
+        shimDisconnect: true
+      }
+    })
   ],
   publicClient,
-  webSocketPublicClient,
+  webSocketPublicClient
 })

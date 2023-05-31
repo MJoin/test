@@ -1,5 +1,6 @@
 'use client'
 
+import { Box } from '@mui/material'
 import { useAccount, useEnsName } from 'wagmi'
 
 export function Account() {
@@ -7,9 +8,9 @@ export function Account() {
   const { data: ensName } = useEnsName({ address })
 
   return (
-    <div>
+    <Box>
       {ensName ?? address}
       {ensName ? ` (${address})` : null}
-    </div>
+    </Box>
   )
 }

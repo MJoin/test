@@ -1,60 +1,37 @@
 'use client'
 
+import { Box, Button, Stack } from '@mui/material'
 import { useState } from 'react'
 import type { Address } from 'wagmi'
 import { useAccount, useBalance } from 'wagmi'
 
 export function Balance() {
   return (
-    <>
-      <div>
-        <AccountBalance />
-      </div>
-      <br />
-      <div>
-        <FindBalance />
-      </div>
-    </>
-  )
-}
-
-export function AccountBalance() {
-  const { address } = useAccount()
-  const { data, refetch } = useBalance({
-    address,
-    watch: true,
-  })
-
-  return (
-    <div>
-      {data?.formatted}
-      <button onClick={() => refetch()}>refetch</button>
-    </div>
+    <Box>
+      <FindBalance />
+    </Box>
   )
 }
 
 export function FindBalance() {
-  const [address, setAddress] = useState('')
-  const { data, isLoading, refetch } = useBalance({
-    address: address as Address,
+  const [account, setAccount] = useState('')
+  const { address } = useAccount()
+  const { data } = useBalance({
+    address: account as Address
   })
 
-  const [value, setValue] = useState('')
+  const getBalance = () => {
+    setAccount(address as Address)
+  }
 
   return (
-    <div>
-      Find balance:{' '}
-      <input
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="wallet address"
-        value={value}
-      />
-      <button
-        onClick={() => (value === address ? refetch() : setAddress(value))}
-      >
-        {isLoading ? 'fetching...' : 'fetch'}
-      </button>
-      <div>{data?.formatted}</div>
-    </div>
+    <Stack flexDirection={'row'} alignItems={'center'}>
+      <div>{data?.formatted ?? 0}</div>
+      <Stack width={180} ml={20}>
+        <Button variant="contained" onClick={() => getBalance()}>
+          getBalance
+        </Button>
+      </Stack>
+    </Stack>
   )
 }

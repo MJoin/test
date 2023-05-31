@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { recoverTypedDataAddress } from 'viem'
 import { type Address, useSignTypedData } from 'wagmi'
@@ -8,31 +9,31 @@ const domain = {
   name: 'Ether Mail',
   version: '1',
   chainId: 1,
-  verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+  verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
 } as const
 
 const types = {
   Person: [
     { name: 'name', type: 'string' },
-    { name: 'wallet', type: 'address' },
+    { name: 'wallet', type: 'address' }
   ],
   Mail: [
     { name: 'from', type: 'Person' },
     { name: 'to', type: 'Person' },
-    { name: 'contents', type: 'string' },
-  ],
+    { name: 'contents', type: 'string' }
+  ]
 } as const
 
 const message = {
   from: {
     name: 'Cow',
-    wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+    wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826'
   },
   to: {
     name: 'Bob',
-    wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+    wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
   },
-  contents: 'Hello, Bob!',
+  contents: 'Hello, Bob!'
 } as const
 
 export function SignTypedData() {
@@ -40,7 +41,7 @@ export function SignTypedData() {
     domain,
     types,
     message,
-    primaryType: 'Mail',
+    primaryType: 'Mail'
   })
 
   const [recoveredAddress, setRecoveredAddress] = useState<Address>()
@@ -53,17 +54,17 @@ export function SignTypedData() {
           types,
           message,
           primaryType: 'Mail',
-          signature: data,
-        }),
+          signature: data
+        })
       )
     })()
   }, [data])
 
   return (
     <>
-      <button disabled={isLoading} onClick={() => signTypedData()}>
+      <Button disabled={isLoading} onClick={() => signTypedData()}>
         {isLoading ? 'Check Wallet' : 'Sign Message'}
-      </button>
+      </Button>
 
       {data && (
         <div>

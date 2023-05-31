@@ -1,25 +1,20 @@
 'use client'
 
+import { Button, Input, Stack } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { recoverMessageAddress } from 'viem'
 import { type Address, useSignMessage } from 'wagmi'
 
 export function SignMessage() {
   const [recoveredAddress, setRecoveredAddress] = useState<Address>()
-  const {
-    data: signature,
-    variables,
-    error,
-    isLoading,
-    signMessage,
-  } = useSignMessage()
+  const { data: signature, variables, error, isLoading, signMessage } = useSignMessage()
 
   useEffect(() => {
     ;(async () => {
       if (variables?.message && signature) {
         const recoveredAddress = await recoverMessageAddress({
           message: variables?.message,
-          signature,
+          signature
         })
         setRecoveredAddress(recoveredAddress)
       }
@@ -37,10 +32,12 @@ export function SignMessage() {
           signMessage({ message })
         }}
       >
-        <input name="message" type="text" required />
-        <button disabled={isLoading} type="submit">
-          {isLoading ? 'Check Wallet' : 'Sign Message'}
-        </button>
+        <Stack flexDirection={'row'}>
+          <Input name="message" type="text" required />
+          <Button sx={{ marginLeft: 10 }} variant="contained" disabled={isLoading} type="submit">
+            {isLoading ? 'Check Wallet' : 'Sign Message'}
+          </Button>
+        </Stack>
       </form>
 
       {signature && (
