@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { Connect } from './Connect'
 import { styled } from '@mui/material'
+import TowPage from './TowPage'
 interface TabPanelProps {
   children?: React.ReactNode
   index: number
@@ -62,7 +63,7 @@ export default function MTabs() {
         <Connect />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <TowPage />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
