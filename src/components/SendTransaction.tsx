@@ -1,67 +1,86 @@
 'use client'
 
-import { parseEther } from 'viem'
-import { useSendTransaction, useWaitForTransaction } from 'wagmi'
+import { Address, parseEther } from 'viem'
+import { useAccount, useContractWrite, useSendTransaction, useWaitForTransaction } from 'wagmi'
+import ERC20Abi from '../abi/BscAbi.json'
 
 import { stringify } from '../utils/stringify'
 import { Button, Input, Stack } from '@mui/material'
-
+import { useState } from 'react'
+const BASE = '0xFa60D973F7642B748046464e165A65B7323b0DEE'
 export function SendTransaction() {
-  const { data, error, isLoading, isError, sendTransaction } = useSendTransaction()
-  const {
-    data: receipt,
-    isLoading: isPending,
-    isSuccess
-  } = useWaitForTransaction({ hash: data?.hash })
-
+  const { address } = useAccount()
+  const [addressValue, setAddressValue] = useState('')
+  const [amount, setAmount] = useState('')
+  const [value, setValue] = useState('')
+  const { write: ApproveWrite } = useContractWrite({
+    address: BASE,
+    abi: ERC20Abi,
+    functionName: 'approve'
+  })
+  const { write: SendWrite } = useContractWrite({
+    address: BASE,
+    abi: ERC20Abi,
+    functionName: 'approve'
+  })
   const Approve = (e: any) => {
     e.preventDefault()
-    console.log(222, e)
+    ApproveWrite({
+      args: [address, amount]
+    })
   }
 
   const send = (e: any) => {
     e.preventDefault()
+    SendWrite({
+      args: ['0x060615638ba98Ea67415C29d94C75464a02d7f5D', value]
+    })
   }
   return (
     <>
-      <form
-        onSubmit={
-          (e) => Approve(e)
-          // (e) => {
-          // e.preventDefault()
-          // const formData = new FormData(e.target as HTMLFormElement)
-          // const address = formData.get('address') as string
-          // const value = formData.get('value') as `${number}`
-          // sendTransaction({
-          //   to: address,
-          //   value: parseEther(value)
-          // })
-          // }
-        }
-      >
-        <Stack>
-          <Input sx={{ width: 480 }} name="address" placeholder="address" />
-          <Input sx={{ width: 180 }} name="value" placeholder="value (ether)" />
-        </Stack>
-        <Button sx={{ marginTop: 1, marginRight: 1 }} variant="contained" type="submit">
+      <Stack>
+        <Input
+          onChange={(e) => {
+            setAddressValue(e.target.value)
+          }}
+          sx={{ width: 480 }}
+          name="address"
+          placeholder="address"
+        />
+        <Input
+          onChange={(e) => {
+            setAmount(e.target.value)
+          }}
+          sx={{ width: 180 }}
+          name="value"
+          placeholder="value (ether)"
+        />
+      </Stack>
+
+      <Button onClick={
+        send
+      } sx={{ marginTop: 1, width: 100 }} variant="contained" type="submit">
+        Send
+      </Button>
+
+      <Stack mt={5}>
+        <Input
+          onChange={(e) => {
+            setValue(e.target.value)
+          }}
+          sx={{ width: 180 }}
+          name="value"
+          placeholder="value (ether)"
+        />
+        <Button
+          onClick={Approve}
+          sx={{ marginTop: 1, marginRight: 1, width: 100 }}
+          variant="contained"
+          type="submit"
+        >
           Approve
         </Button>
-        <Button sx={{ marginTop: 1 }} variant="contained" type="submit">
-          Send
-        </Button>
-      </form>
-
-      {isLoading && <div>Check wallet...</div>}
-      {isPending && <div>Transaction pending...</div>}
-      {isSuccess && (
-        <>
-          <div>Transaction Hash: {data?.hash}</div>
-          <div>
-            Transaction Receipt: <pre>{stringify(receipt, null, 2)}</pre>
-          </div>
-        </>
-      )}
-      {isError && <div>Error: {error?.message}</div>}
+      </Stack>
     </>
   )
 }

@@ -2,63 +2,100 @@
 
 import { useState } from 'react'
 import { BaseError } from 'viem'
-import { type Address, useContractRead } from 'wagmi'
+import { type Address, useContractRead, useAccount } from 'wagmi'
 
-import { wagmiContractConfig } from './contracts'
 import { Button, Input, Stack } from '@mui/material'
+import ERC20Abi from '../abi/BscAbi.json'
 
+//bsc address
+// 0xfa60d973f7642b748046464e165a65b7323b0dee
+const BASE = '0xFa60D973F7642B748046464e165A65B7323b0DEE'
 export function ReadContract() {
   return (
     <Stack>
       <BalanceOf />
       <br />
-      <TotalSupply />
-    </Stack>
-  )
-}
-
-function TotalSupply() {
-  const { data, isRefetching, refetch } = useContractRead({
-    ...wagmiContractConfig,
-    functionName: 'totalSupply'
-  })
-
-  return (
-    <Stack>
-      Total Supply: {data?.toString()}
-      <Button
-        sx={{ width: 180 ,marginTop: 1}}
-        variant="contained"
-        disabled={isRefetching}
-        onClick={() => refetch()}
-      >
-        {isRefetching ? 'loading...' : 'refetch'}
-      </Button>
+      <GetName />
+      <br />
+      <GetSymbol />
     </Stack>
   )
 }
 
 function BalanceOf() {
-  const [address, setAddress] = useState<Address>('0xa5cc3c03994DB5b0d9A5eEdD10CabaB0813678AC')
+  const { address } = useAccount()
+  const [Token, setToken] = useState('')
   const { data, error, isLoading, isSuccess } = useContractRead({
-    ...wagmiContractConfig,
+    address: Token as Address,
+    abi: ERC20Abi,
     functionName: 'balanceOf',
     args: [address],
     enabled: Boolean(address)
   })
 
-  const [value, setValue] = useState<string>(address)
-
   return (
     <Stack>
       Token balance: {isSuccess && data?.toString()}
-      <Input
-        sx={{ width: 480 }}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="wallet address"
-        value={value}
-      />
-      <Button sx={{ width: 180,marginTop: 1 }} variant="contained" onClick={() => setAddress(value as Address)}>
+      <Button
+        sx={{ width: 180, marginTop: 1 }}
+        variant="contained"
+        onClick={(e: any) => {
+          e.preventDefault()
+          setToken(BASE)
+        }}
+      >
+        {isLoading ? 'fetching...' : 'fetch'}
+      </Button>
+      {error && <div>{(error as BaseError).shortMessage}</div>}
+    </Stack>
+  )
+}
+function GetName() {
+  const { address } = useAccount()
+  const [Token, setToken] = useState('')
+
+  const { data, error, isLoading, isSuccess } = useContractRead({
+    address: Token as Address,
+    abi: ERC20Abi,
+    functionName: 'name'
+  })
+  return (
+    <Stack>
+      name: {isSuccess && data?.toString()}
+      <Button
+        sx={{ width: 180, marginTop: 1 }}
+        variant="contained"
+        onClick={(e: any) => {
+          e.preventDefault()
+          setToken(BASE)
+        }}
+      >
+        {isLoading ? 'fetching...' : 'fetch'}
+      </Button>
+      {error && <div>{(error as BaseError).shortMessage}</div>}
+    </Stack>
+  )
+}
+function GetSymbol() {
+  const { address } = useAccount()
+  const [Token, setToken] = useState('')
+
+  const { data, error, isLoading, isSuccess } = useContractRead({
+    address: Token as Address,
+    abi: ERC20Abi,
+    functionName: 'symbol'
+  })
+  return (
+    <Stack>
+      symbol: {isSuccess && data?.toString()}
+      <Button
+        sx={{ width: 180, marginTop: 1 }}
+        variant="contained"
+        onClick={(e: any) => {
+          e.preventDefault()
+          setToken(BASE)
+        }}
+      >
         {isLoading ? 'fetching...' : 'fetch'}
       </Button>
       {error && <div>{(error as BaseError).shortMessage}</div>}

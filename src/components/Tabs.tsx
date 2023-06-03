@@ -44,7 +44,7 @@ function a11yProps(index: number) {
 }
 
 export default function MTabs() {
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = React.useState(1)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
