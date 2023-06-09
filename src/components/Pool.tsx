@@ -143,7 +143,7 @@ const Pool = () => {
               defaultValue={aAmount}
               onChange={(e) => {
                 setTimeout(() => {
-                  setAAmount(e.target.value)
+                  setAAmount(Number(e.target.value))
                 }, 600)
               }}
             />
