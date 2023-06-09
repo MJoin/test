@@ -6,6 +6,9 @@ import Box from '@mui/material/Box'
 import { Connect } from './Connect'
 import { styled } from '@mui/material'
 import TowPage from './TowPage'
+
+import { useState } from 'react'
+import Pool from './Pool'
 interface TabPanelProps {
   children?: React.ReactNode
   index: number
@@ -44,7 +47,7 @@ function a11yProps(index: number) {
 }
 
 export default function MTabs() {
-  const [value, setValue] = React.useState(1)
+  const [value, setValue] = useState(2)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -53,7 +56,7 @@ export default function MTabs() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <MTab value={value} onChange={handleChange} aria-label="basic tabs example">
+        <MTab value={value} onChange={handleChange}>
           <Tab label="Item One" {...a11yProps(0)} />
           <Tab label="Item Two" {...a11yProps(1)} />
           <Tab label="Item Three" {...a11yProps(2)} />
@@ -66,7 +69,7 @@ export default function MTabs() {
         <TowPage />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <Pool />
       </TabPanel>
     </Box>
   )

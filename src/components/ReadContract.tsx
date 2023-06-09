@@ -6,17 +6,16 @@ import { type Address, useContractRead, useAccount } from 'wagmi'
 
 import { Button, Input, Stack } from '@mui/material'
 import ERC20Abi from '../abi/BscAbi.json'
+import { BigNumber, ethers } from 'ethers'
 
 //bsc address
 // 0xfa60d973f7642b748046464e165a65b7323b0dee
 const BASE = '0xFa60D973F7642B748046464e165A65B7323b0DEE'
 export function ReadContract() {
   return (
-    <Stack>
+    <Stack spacing={3}>
       <BalanceOf />
-      <br />
       <GetName />
-      <br />
       <GetSymbol />
     </Stack>
   )
@@ -35,7 +34,7 @@ function BalanceOf() {
 
   return (
     <Stack>
-      Token balance: {isSuccess && data?.toString()}
+      Token balance: {isSuccess && ethers.utils.formatUnits((data as any) || '0', 'ether')}
       <Button
         sx={{ width: 180, marginTop: 1 }}
         variant="contained"

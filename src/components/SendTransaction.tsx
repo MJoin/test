@@ -39,14 +39,14 @@ export function SendTransaction() {
   return (
     <>
       <Stack>
-        <Input
+        {/* <Input
           onChange={(e) => {
             setAddressValue(e.target.value)
           }}
           sx={{ width: 480 }}
           name="address"
           placeholder="address"
-        />
+        /> */}
         <Input
           onChange={(e) => {
             setAmount(e.target.value)
@@ -57,9 +57,7 @@ export function SendTransaction() {
         />
       </Stack>
 
-      <Button onClick={
-        send
-      } sx={{ marginTop: 1, width: 100 }} variant="contained" type="submit">
+      <Button onClick={send} sx={{ marginTop: 1, width: 100 }} variant="contained" type="submit">
         Send
       </Button>
 
