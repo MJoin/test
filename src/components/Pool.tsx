@@ -114,7 +114,6 @@ const Pool = () => {
               required
               id="outlined-required"
               label="TokenAddressA"
-              type="number"
               defaultValue={tokenA}
               onChange={(e) => {
                 setTokenA(e.target.value)
@@ -140,6 +139,7 @@ const Pool = () => {
               required
               id="outlined-required"
               label="A数量"
+              type="number"
               defaultValue={aAmount}
               onChange={(e) => {
                 setTimeout(() => {
